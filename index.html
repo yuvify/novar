@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>novar</title>
+</head>
+<body>
+
+    <h1>novar</h1>
+    
+    <div id="idList">
+        <strong>Available Matches:</strong>
+        <ul id="matches"></ul>
+    </div>
+
+    <label for="matchId">Enter Match ID:</label>
+    <input type="text" id="matchId" placeholder="Enter match ID">
+    <button onclick="embedMatch()">Embed Match</button>
+    <button onclick="viewMatches()">View Matches</button>
+
+    <script>
+        const matchList = document.getElementById('matches');
+        const apiUrl = 'https://streamed.su/api/matches/football';
+        let matchesData = [];
+
+        async function fetchMatchIds() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                matchesData = data; // Store the fetched matches data
+            } catch (error) {
+                console.error('Error fetching match IDs:', error);
+            }
+        }
+
+        function viewMatches() {
+            matchList.innerHTML = ''; // Clear the current list
+            matchesData.forEach(match => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${match.title} (ID: ${match.id})`; // Show title and ID
+                matchList.appendChild(listItem);
+            });
+        }
+
+        function embedMatch() {
+            const matchId = document.getElementById('matchId').value;
+            const embedUrl = `https://embedme.top/embed/alpha/${matchId}/1`;
+            var win = window.open();
+            var iframe = win.document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.width = '100vw';
+            iframe.style.height = '100vh';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.zIndex = '2147483647';
+            iframe.style.backgroundColor = 'white';
+            iframe.style.border = 'none';
+            iframe.src = embedUrl;
+            win.document.body.appendChild(iframe);
+        }
+
+        fetchMatchIds();
+    </script>
+
+</body>
+</html>
